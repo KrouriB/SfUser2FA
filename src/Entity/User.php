@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
@@ -41,6 +43,13 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function hashedPassword(string $password): static
+    {
+        $this->password = password_hash($password);
 
         return $this;
     }

@@ -60,11 +60,13 @@ class UserController extends AbstractController
         $user = $this->checkUser($email, $userRepository, $userAuthCheck);
         if($user == false)
         {
+            $session->discardUser();
             return $this->render('user/login.html.twig');
         }
         $check = $this->checkPassword($password, $user, $userAuthCheck, $hashedPassword);
         if($check == false)
         {
+            $session->discardUser();
             return $this->render('user/login.html.twig');
         }
         $session->stockUser($user);
@@ -75,6 +77,7 @@ class UserController extends AbstractController
     {
         $user = $session->retriveUser();
         $check = $this->checkCode($code, $userAuthCheck, $codes);
+        $session->discardCode();
         if($check == false)
         {
             return $this->render('user/resend.html.twig');
@@ -92,6 +95,7 @@ class UserController extends AbstractController
         }
         else
         {
+            $session->discardUser();
             return $this->render('user/login.html.twig');
         }
     }

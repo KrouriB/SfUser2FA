@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Service\HashedPassword;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -14,6 +15,9 @@ class User
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
+
+    // #[ORM\Column(length: 100, unique: true)]
+    // private ?string $pseudo = null;
 
     #[ORM\Column]
     private ?string $password = null;
@@ -35,19 +39,24 @@ class User
         return $this;
     }
 
+    // public function getPseudo(): ?string
+    // {
+    //     return $this->pseudo;
+    // }
+
+    // public function setPseudo(string $pseudo): static
+    // {
+    //     $this->pseudo = $pseudo;
+
+    //     return $this;
+    // }
+
     public function getPassword(): string
     {
         return $this->password;
     }
 
     public function setPassword(string $password): static
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function hashedPassword(string $password): static
     {
         $this->password = password_hash($password);
 

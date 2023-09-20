@@ -22,6 +22,38 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/login', name: 'app_login')]
+    public function login(): Response
+    {
+        return $this->render('user/login.html.twig', [
+            'controller_name' => 'UserController',
+        ]);
+    }
+
+    #[Route('/code', name: 'app_code')]
+    public function code(): Response
+    {
+        return $this->render('user/code.html.twig', [
+            'controller_name' => 'UserController',
+        ]);
+    }
+
+    #[Route('/resend', name: 'app_resend')]
+    public function resend(): Response
+    {
+        return $this->render('user/resend.html.twig', [
+            'controller_name' => 'UserController',
+        ]);
+    }
+
+    #[Route('/home', name: 'app_home')]
+    public function home(): Response
+    {
+        return $this->render('user/homePage.html.twig', [
+            'controller_name' => 'UserController',
+        ]);
+    }
+
     public function checkUser(string $email, UserRepository $userRepository, UserAuthCheck $userAuthCheck)
     {
         $users = $userRepository->findAll();
@@ -41,7 +73,7 @@ class UserController extends AbstractController
         $code = $codes->generate();
         $mailer->sendCodeTo($user, $code);
         $session->stockCode($code);
-        return $this->render('user/code.html.twig');
+        return $this->code();
     }
 
     public function checkCode(int $code, UserAuthCheck $userAuthCheck, Codes $codes)
@@ -61,13 +93,13 @@ class UserController extends AbstractController
         if($user == false)
         {
             $session->discardUser();
-            return $this->render('user/login.html.twig');
+            return $this->login();
         }
         $check = $this->checkPassword($password, $user, $userAuthCheck, $hashedPassword);
         if($check == false)
         {
             $session->discardUser();
-            return $this->render('user/login.html.twig');
+            return $this->login();
         }
         $session->stockUser($user);
         $this->sendCode($user, $codes, $mailer, $session);
@@ -80,13 +112,13 @@ class UserController extends AbstractController
         $session->discardCode();
         if($check == false)
         {
-            return $this->render('user/resend.html.twig');
+            return $this->resend();
         }
         $this->connected($user);
         return $this->render('user/homePage.html.twig');
     }
 
-    public function resend(bool $response, Codes $codes, Mailer $mailer, Session $session)
+    public function resended(bool $response, Codes $codes, Mailer $mailer, Session $session)
     {
         $user = $session->retriveUser();
         if($response == true)
@@ -96,7 +128,7 @@ class UserController extends AbstractController
         else
         {
             $session->discardUser();
-            return $this->render('user/login.html.twig');
+            return $this->login();
         }
     }
 }

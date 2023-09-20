@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\Codes;
 use App\Service\Mailer;
+use App\Service\Session;
 use App\Service\UserAuthCheck;
 use App\Service\HashedPassword;
 use App\Repository\UserRepository;
